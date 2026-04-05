@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Memory ♡</title>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400&family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #121212;
+            --surface: #1e1e1e;
+            --text-main: #ffffff;
+            --text-dim: #a0a0a0;
+            --accent: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Prompt', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* --- Login Page --- */
+        #login-page {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg); z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.8s ease;
+        }
+
+        .pass-dots { display: flex; gap: 15px; margin: 30px 0; }
+        .dot { width: 12px; height: 12px; border: 1px solid var(--accent); border-radius: 50%; transition: 0.3s; }
+        .dot.active { background: var(--accent); box-shadow: 0 0 15px var(--accent); }
+
+        .keypad { display: grid; grid-template-columns: repeat(3, 70px); gap: 20px; }
+        .key { 
+            width: 70px; height: 70px; border: 1px solid rgba(255,255,255,0.1); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; cursor: pointer; transition: 0.2s;
+        }
+        .key:active { background: white; color: black; }
+
+        /* --- Letter Page --- */
+        #main-content {
+            display: none; height: 100%; opacity: 0;
+            flex-direction: column; align-items: center; justify-content: center;
+            padding: 20px; text-align: center;
+            transition: opacity 1.5s ease;
+        }
+
+        .envelope-wrap {
+            position: relative; width: 100%; max-width: 400px;
+            perspective: 1000px;
+        }
+
+        .letter-box {
+            background: var(--surface);
+            padding: 40px 25px;
+            border-radius: 4px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.05);
+            max-height: 80vh;
+            overflow-y: auto;
+            line-height: 1.8;
+            font-weight: 300;
+        }
+
+        .letter-text {
+            white-space: pre-line;
+            font-size: 0.95rem;
+            color: var(--text-dim);
+            animation: fadeInText 2s forwards;
+        }
+
+        .highlight {
+            color: var(--text-main);
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        @keyframes fadeInText { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .shake { animation: shake 0.4s; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+
+        /* Custom Scrollbar */
+        .letter-box::-webkit-scrollbar { width: 3px; }
+        .letter-box::-webkit-scrollbar-thumb { background: #333; }
+    </style>
+</head>
+<body>
+
+    <audio id="bgm" loop>
+        <source src="song.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="login-page">
+        <div style="letter-spacing: 4px; font-size: 0.8rem; color: var(--text-dim); text-transform: uppercase;">Security Check</div>
+        <div class="pass-dots" id="dots-container">
+            <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+            <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+        <div class="keypad">
+            <div class="key" onclick="press('1')">1</div><div class="key" onclick="press('2')">2</div><div class="key" onclick="press('3')">3</div>
+            <div class="key" onclick="press('4')">4</div><div class="key" onclick="press('5')">5</div><div class="key" onclick="press('6')">6</div>
+            <div class="key" onclick="press('7')">7</div><div class="key" onclick="press('8')">8</div><div class="key" onclick="press('9')">9</div>
+            <div style="width:70px"></div><div class="key" onclick="press('0')">0</div><div class="key" onclick="del()" style="font-size:14px">DEL</div>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <div class="envelope-wrap">
+            <div class="letter-box">
+                <span class="highlight">To my special one,</span>
+                <div class="letter-text" id="letter-content">
+                    Happy anniversary 1 m ka tirak
+                    ขอให้เรายังรักกันแบบนี้ไปเรื่อยๆนะคะ
+                    เค้าขอโทษที่ชอบงี่เอาหรือว่าชวนทะเลาะบ่อยๆ
+                    แล้วก็ชอบบอกว่ารำคาญ
+                    ทั้งๆที่เค้าทักเธอไปก่อน
+                    เค้าแค่ไม่รู้ว่าจะคุยอะไรเค้าคิดถึงเธอเฉยๆ 
+                    แล้วก็เค้ารักเธอมากมาก
+                    ขอบคุณที่ทนนิสัยเค้ามาตลอดเลยนะคะ TT
+                    แล้วเค้าก็ขอให้เธอมีความสุข
+                    เค้าอยากให้เธอรู้ไว้ว่าเธอเป็นยังไงเค้าก็รัก
+                    เค้าอยากให้เราอยู่ด้วยกันไปนานๆเลยค่ะ
+                    เค้ารักเธอ
+                    rak nongwen tisud nai lokkkk
+                    กลับมาคบกันนะ
+                </div>
+                <div style="margin-top: 30px; font-size: 0.7rem; color: #444; letter-spacing: 2px;">2026 • MEMORY</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let input = "";
+        const correct = "060369";
+        const dots = document.querySelectorAll('.dot');
+        const loginPage = document.getElementById('login-page');
+        const mainContent = document.getElementById('main-content');
+        const bgm = document.getElementById('bgm');
+
+        function press(num) {
+            if (input.length < 6) {
+                input += num;
+                updateDots();
+                if (input.length === 6) {
+                    checkPass();
+                }
+            }
+        }
+
+        function del() {
+            input = input.slice(0, -1);
+            updateDots();
+        }
+
+        function updateDots() {
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i < input.length);
+            });
+        }
+
+        function checkPass() {
+            if (input === correct) {
+                // Success
+                loginPage.style.opacity = "0";
+                setTimeout(() => {
+                    loginPage.style.display = "none";
+                    mainContent.style.display = "flex";
+                    setTimeout(() => { mainContent.style.opacity = "1"; }, 100);
+                    bgm.play().catch(e => console.log("Autoplay blocked. User interaction needed."));
+                }, 800);
+            } else {
+                // Fail
+                loginPage.classList.add('shake');
+                setTimeout(() => {
+                    loginPage.classList.remove('shake');
+                    input = "";
+                    updateDots();
+                }, 400);
+            }
+        }
+    </script>
+</body>
+</html>
