@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memory 2026</title>
+    <title>Memory 2026 ♡</title>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400&family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #0a0a0a;
-            --text-dim: #888;
+            --text-dim: #666;
             --white: #ffffff;
             --card-bg: #1a1a1a;
         }
@@ -24,6 +24,22 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
+        }
+
+        /* --- Background Hearts --- */
+        .heart-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0; overflow: hidden; display: none;
+        }
+        .floating-heart {
+            position: absolute; color: rgba(255, 255, 255, 0.2);
+            font-size: 1.2rem; animation: floatUp linear forwards;
+        }
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.5; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
         }
 
         /* --- Login Section --- */
@@ -31,70 +47,78 @@
             position: fixed; inset: 0; background: var(--bg);
             z-index: 100; display: flex; flex-direction: column;
             align-items: center; justify-content: center;
-            transition: opacity 0.8s ease, visibility 0.8s;
+            transition: opacity 0.8s ease;
         }
 
         .dots { display: flex; gap: 15px; margin: 30px 0; }
         .dot { width: 12px; height: 12px; border: 1px solid #333; border-radius: 50%; transition: 0.3s; }
         .dot.active { background: var(--white); box-shadow: 0 0 10px var(--white); border-color: var(--white); }
 
-        .keypad { display: grid; grid-template-columns: repeat(3, 70px); gap: 20px; }
+        .keypad { display: grid; grid-template-columns: repeat(3, 75px); gap: 15px; }
         .key { 
-            width: 70px; height: 70px; border: 1px solid #222; border-radius: 50%;
+            width: 75px; height: 75px; border: 1px solid #1a1a1a; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.2rem; cursor: pointer; transition: 0.2s;
+            font-size: 1.2rem; cursor: pointer; transition: 0.2s; background: #0f0f0f;
         }
         .key:active { background: var(--white); color: #000; }
 
-        /* --- Envelope Section --- */
+        /* --- Main Content --- */
         #main-content {
-            display: none; opacity: 0; flex-direction: column; align-items: center; width: 100%;
+            display: none; opacity: 0; flex-direction: column; align-items: center; 
+            justify-content: center; width: 100%; height: 100%; z-index: 10;
             transition: opacity 1s ease;
         }
 
-        .envelope-wrapper {
-            position: relative; width: 280px; height: 180px;
-            background: #222; border-radius: 0 0 5px 5px;
-            cursor: pointer; margin-top: 100px;
-            transition: transform 0.3s;
+        .envelope-container {
+            position: relative; width: 280px; height: 180px; cursor: pointer;
         }
 
-        /* ฝาซองจดหมาย */
-        .envelope-wrapper::before {
-            content: ''; position: absolute; top: -90px; left: 0;
+        .envelope-base {
+            position: absolute; bottom: 0; width: 100%; height: 100%;
+            background: #1e1e1e; border-radius: 0 0 8px 8px; z-index: 5;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .envelope-flap {
+            position: absolute; top: 0; left: 0; width: 0; height: 0;
             border-left: 140px solid transparent; border-right: 140px solid transparent;
-            border-bottom: 90px solid #333; z-index: 5;
-            transition: transform 0.5s ease, z-index 0.3s;
-            transform-origin: bottom;
+            border-top: 100px solid #2a2a2a; transform-origin: top;
+            transition: transform 0.6s ease; z-index: 7;
         }
 
-        /* ข้อความ "แตะเพื่ออ่าน" */
-        .tap-instruction {
-            margin-top: 40px; color: var(--text-dim); font-size: 0.8rem;
-            letter-spacing: 2px; animation: pulse 2s infinite;
+        /* การ์ดข้อความ (เริ่มต้นซ่อนในซอง) */
+        .letter-card {
+            position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px;
+            background: #fdfdfd; color: #111; border-radius: 5px;
+            padding: 35px 25px; z-index: 2; opacity: 0;
+            transition: transform 1s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.5s ease, height 0.8s ease;
+            transform: scale(0.8) translateY(0); pointer-events: none;
+            overflow-y: auto; text-align: left; line-height: 1.8;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
         }
 
-        /* การ์ดข้อความ */
-        .card {
-            position: absolute; bottom: 10px; left: 10px; right: 10px;
-            background: var(--card-bg); color: #ccc;
-            padding: 30px 20px; border-radius: 5px;
-            height: 160px; z-index: 2;
-            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), height 0.8s ease;
-            overflow-y: auto; text-align: left; line-height: 1.8; font-size: 0.85rem;
-            border: 1px solid #333;
+        /* เมื่อเปิดจดหมาย */
+        .envelope-container.open .envelope-flap { transform: rotateX(180deg); z-index: 1; }
+        
+        .envelope-container.open .letter-card {
+            opacity: 1; pointer-events: auto;
+            position: fixed; top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            width: 90%; max-width: 340px; height: auto; max-height: 80vh;
+            z-index: 1000;
         }
 
-        /* เมื่อซองจดหมายถูกเปิด */
-        .envelope-wrapper.open::before { transform: rotateX(180deg); z-index: 1; }
-        .envelope-wrapper.open .card {
-            transform: translateY(-240px);
-            height: 420px;
-            z-index: 10;
-            color: var(--white);
+        .highlight { 
+            font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.3rem; 
+            display: block; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 10px;
+            color: #000;
         }
 
-        .highlight { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.2rem; display: block; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+        .tap-msg {
+            position: absolute; bottom: -60px; width: 100%; text-align: center;
+            font-size: 0.75rem; color: var(--text-dim); letter-spacing: 2px;
+            animation: pulse 2s infinite;
+        }
 
         @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
         .shake { animation: shake 0.4s; }
@@ -105,8 +129,10 @@
 
     <audio id="bgm" loop><source src="song.mp3" type="audio/mpeg"></audio>
 
+    <div class="heart-bg" id="heart-container"></div>
+
     <div id="login-page">
-        <p style="font-size: 0.7rem; letter-spacing: 3px; color: var(--text-dim);">ENTER CODE</p>
+        <p style="font-size: 0.7rem; letter-spacing: 4px; color: var(--text-dim); margin-bottom: 10px;">AUTH REQUIRED</p>
         <div class="dots">
             <div class="dot"></div><div class="dot"></div><div class="dot"></div>
             <div class="dot"></div><div class="dot"></div><div class="dot"></div>
@@ -115,14 +141,16 @@
             <div class="key" onclick="press('1')">1</div><div class="key" onclick="press('2')">2</div><div class="key" onclick="press('3')">3</div>
             <div class="key" onclick="press('4')">4</div><div class="key" onclick="press('5')">5</div><div class="key" onclick="press('6')">6</div>
             <div class="key" onclick="press('7')">7</div><div class="key" onclick="press('8')">8</div><div class="key" onclick="press('9')">9</div>
-            <div style="width:70px"></div><div class="key" onclick="press('0')">0</div><div class="key" onclick="del()">←</div>
+            <div style="width:75px"></div><div class="key" onclick="press('0')">0</div><div class="key" onclick="del()" style="font-size: 14px;">DEL</div>
         </div>
     </div>
 
     <div id="main-content">
-        <div class="envelope-wrapper" id="env" onclick="openLetter()">
-            <div class="card">
-                <span class="highlight">To my special one,</span>
+        <div class="envelope-container" id="env" onclick="openLetter()">
+            <div class="envelope-flap"></div>
+            <div class="envelope-base"></div>
+            <div class="letter-card">
+                <span class="highlight">Dear you,</span>
                 Happy anniversary 1 m ka tirak<br>
                 ขอให้เรายังรักกันแบบนี้ไปเรื่อยๆนะคะ<br>
                 เค้าขอโทษที่ชอบงี่เง่าหรือว่าชวนทะเลาะบ่อยๆ<br>
@@ -138,8 +166,8 @@
                 rak nongwen tisud nai lokkkk<br>
                 กลับมาคบกันนะ
             </div>
+            <p class="tap-msg" id="tap-text">TAP TO OPEN ♡</p>
         </div>
-        <p class="tap-instruction" id="hint">TAP TO OPEN ♡</p>
     </div>
 
     <script>
@@ -148,6 +176,7 @@
         const dots = document.querySelectorAll('.dot');
         const loginPage = document.getElementById('login-page');
         const mainContent = document.getElementById('main-content');
+        const heartContainer = document.getElementById('heart-container');
         const bgm = document.getElementById('bgm');
 
         function press(num) {
@@ -167,6 +196,8 @@
                 setTimeout(() => {
                     loginPage.style.display = "none";
                     mainContent.style.display = "flex";
+                    heartContainer.style.display = "block";
+                    createHearts();
                     setTimeout(() => mainContent.style.opacity = "1", 100);
                     bgm.play().catch(() => {});
                 }, 800);
@@ -176,15 +207,24 @@
             }
         }
 
+        function createHearts() {
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart';
+                heart.innerHTML = '♡';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                heart.style.opacity = Math.random();
+                heartContainer.appendChild(heart);
+                setTimeout(() => heart.remove(), 7000);
+            }, 400);
+        }
+
         function openLetter() {
             const env = document.getElementById('env');
-            const hint = document.getElementById('hint');
-            env.classList.toggle('open');
-            if(env.classList.contains('open')) {
-                hint.style.display = 'none';
-            } else {
-                setTimeout(() => hint.style.display = 'block', 500);
-            }
+            const tapText = document.getElementById('tap-text');
+            env.classList.add('open');
+            tapText.style.display = 'none';
         }
     </script>
 </body>
