@@ -3,107 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Memory ♡</title>
+    <title>Memory 2026</title>
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400&family=Cormorant+Garamond:ital,wght@1,500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #121212;
-            --surface: #1e1e1e;
-            --text-main: #ffffff;
-            --text-dim: #a0a0a0;
-            --accent: #ffffff;
+            --bg: #0a0a0a;
+            --text-dim: #888;
+            --white: #ffffff;
+            --card-bg: #1a1a1a;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             background-color: var(--bg);
-            color: var(--text-main);
+            color: var(--white);
             font-family: 'Prompt', sans-serif;
-            overflow: hidden;
             height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* --- Login Page --- */
+        /* --- Login Section --- */
         #login-page {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg); z-index: 9999;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 0.8s ease;
+            position: fixed; inset: 0; background: var(--bg);
+            z-index: 100; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s;
         }
 
-        .pass-dots { display: flex; gap: 15px; margin: 30px 0; }
-        .dot { width: 12px; height: 12px; border: 1px solid var(--accent); border-radius: 50%; transition: 0.3s; }
-        .dot.active { background: var(--accent); box-shadow: 0 0 15px var(--accent); }
+        .dots { display: flex; gap: 15px; margin: 30px 0; }
+        .dot { width: 12px; height: 12px; border: 1px solid #333; border-radius: 50%; transition: 0.3s; }
+        .dot.active { background: var(--white); box-shadow: 0 0 10px var(--white); border-color: var(--white); }
 
         .keypad { display: grid; grid-template-columns: repeat(3, 70px); gap: 20px; }
         .key { 
-            width: 70px; height: 70px; border: 1px solid rgba(255,255,255,0.1); border-radius: 50%;
+            width: 70px; height: 70px; border: 1px solid #222; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 20px; cursor: pointer; transition: 0.2s;
+            font-size: 1.2rem; cursor: pointer; transition: 0.2s;
         }
-        .key:active { background: white; color: black; }
+        .key:active { background: var(--white); color: #000; }
 
-        /* --- Letter Page --- */
+        /* --- Envelope Section --- */
         #main-content {
-            display: none; height: 100%; opacity: 0;
-            flex-direction: column; align-items: center; justify-content: center;
-            padding: 20px; text-align: center;
-            transition: opacity 1.5s ease;
+            display: none; opacity: 0; flex-direction: column; align-items: center; width: 100%;
+            transition: opacity 1s ease;
         }
 
-        .envelope-wrap {
-            position: relative; width: 100%; max-width: 400px;
-            perspective: 1000px;
+        .envelope-wrapper {
+            position: relative; width: 280px; height: 180px;
+            background: #222; border-radius: 0 0 5px 5px;
+            cursor: pointer; margin-top: 100px;
+            transition: transform 0.3s;
         }
 
-        .letter-box {
-            background: var(--surface);
-            padding: 40px 25px;
-            border-radius: 4px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            border: 1px solid rgba(255,255,255,0.05);
-            max-height: 80vh;
-            overflow-y: auto;
-            line-height: 1.8;
-            font-weight: 300;
+        /* ฝาซองจดหมาย */
+        .envelope-wrapper::before {
+            content: ''; position: absolute; top: -90px; left: 0;
+            border-left: 140px solid transparent; border-right: 140px solid transparent;
+            border-bottom: 90px solid #333; z-index: 5;
+            transition: transform 0.5s ease, z-index 0.3s;
+            transform-origin: bottom;
         }
 
-        .letter-text {
-            white-space: pre-line;
-            font-size: 0.95rem;
-            color: var(--text-dim);
-            animation: fadeInText 2s forwards;
+        /* ข้อความ "แตะเพื่ออ่าน" */
+        .tap-instruction {
+            margin-top: 40px; color: var(--text-dim); font-size: 0.8rem;
+            letter-spacing: 2px; animation: pulse 2s infinite;
         }
 
-        .highlight {
-            color: var(--text-main);
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic;
-            font-size: 1.4rem;
-            margin-bottom: 20px;
-            display: block;
+        /* การ์ดข้อความ */
+        .card {
+            position: absolute; bottom: 10px; left: 10px; right: 10px;
+            background: var(--card-bg); color: #ccc;
+            padding: 30px 20px; border-radius: 5px;
+            height: 160px; z-index: 2;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), height 0.8s ease;
+            overflow-y: auto; text-align: left; line-height: 1.8; font-size: 0.85rem;
+            border: 1px solid #333;
         }
 
-        @keyframes fadeInText { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* เมื่อซองจดหมายถูกเปิด */
+        .envelope-wrapper.open::before { transform: rotateX(180deg); z-index: 1; }
+        .envelope-wrapper.open .card {
+            transform: translateY(-240px);
+            height: 420px;
+            z-index: 10;
+            color: var(--white);
+        }
 
+        .highlight { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.2rem; display: block; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+
+        @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
         .shake { animation: shake 0.4s; }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
-
-        /* Custom Scrollbar */
-        .letter-box::-webkit-scrollbar { width: 3px; }
-        .letter-box::-webkit-scrollbar-thumb { background: #333; }
     </style>
 </head>
 <body>
 
-    <audio id="bgm" loop>
-        <source src="song.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="bgm" loop><source src="song.mp3" type="audio/mpeg"></audio>
 
     <div id="login-page">
-        <div style="letter-spacing: 4px; font-size: 0.8rem; color: var(--text-dim); text-transform: uppercase;">Security Check</div>
-        <div class="pass-dots" id="dots-container">
+        <p style="font-size: 0.7rem; letter-spacing: 3px; color: var(--text-dim);">ENTER CODE</p>
+        <div class="dots">
             <div class="dot"></div><div class="dot"></div><div class="dot"></div>
             <div class="dot"></div><div class="dot"></div><div class="dot"></div>
         </div>
@@ -111,33 +115,31 @@
             <div class="key" onclick="press('1')">1</div><div class="key" onclick="press('2')">2</div><div class="key" onclick="press('3')">3</div>
             <div class="key" onclick="press('4')">4</div><div class="key" onclick="press('5')">5</div><div class="key" onclick="press('6')">6</div>
             <div class="key" onclick="press('7')">7</div><div class="key" onclick="press('8')">8</div><div class="key" onclick="press('9')">9</div>
-            <div style="width:70px"></div><div class="key" onclick="press('0')">0</div><div class="key" onclick="del()" style="font-size:14px">DEL</div>
+            <div style="width:70px"></div><div class="key" onclick="press('0')">0</div><div class="key" onclick="del()">←</div>
         </div>
     </div>
 
     <div id="main-content">
-        <div class="envelope-wrap">
-            <div class="letter-box">
+        <div class="envelope-wrapper" id="env" onclick="openLetter()">
+            <div class="card">
                 <span class="highlight">To my special one,</span>
-                <div class="letter-text" id="letter-content">
-                    Happy anniversary 1 m ka tirak
-                    ขอให้เรายังรักกันแบบนี้ไปเรื่อยๆนะคะ
-                    เค้าขอโทษที่ชอบงี่เอาหรือว่าชวนทะเลาะบ่อยๆ
-                    แล้วก็ชอบบอกว่ารำคาญ
-                    ทั้งๆที่เค้าทักเธอไปก่อน
-                    เค้าแค่ไม่รู้ว่าจะคุยอะไรเค้าคิดถึงเธอเฉยๆ 
-                    แล้วก็เค้ารักเธอมากมาก
-                    ขอบคุณที่ทนนิสัยเค้ามาตลอดเลยนะคะ TT
-                    แล้วเค้าก็ขอให้เธอมีความสุข
-                    เค้าอยากให้เธอรู้ไว้ว่าเธอเป็นยังไงเค้าก็รัก
-                    เค้าอยากให้เราอยู่ด้วยกันไปนานๆเลยค่ะ
-                    เค้ารักเธอ
-                    rak nongwen tisud nai lokkkk
-                    กลับมาคบกันนะ
-                </div>
-                <div style="margin-top: 30px; font-size: 0.7rem; color: #444; letter-spacing: 2px;">2026 • MEMORY</div>
+                Happy anniversary 1 m ka tirak<br>
+                ขอให้เรายังรักกันแบบนี้ไปเรื่อยๆนะคะ<br>
+                เค้าขอโทษที่ชอบงี่เง่าหรือว่าชวนทะเลาะบ่อยๆ<br>
+                แล้วก็ชอบบอกว่ารำคาญ<br>
+                ทั้งๆที่เค้าทักเธอไปก่อน<br>
+                เค้าแค่ไม่รู้ว่าจะคุยอะไรเค้าคิดถึงเธอเฉยๆ <br>
+                แล้วก็เค้ารักเธอมากมาก<br>
+                ขอบคุณที่ทนนิสัยเค้ามาตลอดเลยนะคะ TT<br>
+                แล้วเค้าก็ขอให้เธอมีความสุข<br>
+                เค้าอยากให้เธอรู้ไว้ว่าเธอเป็นยังไงเค้าก็รัก<br>
+                เค้าอยากให้เราอยู่ด้วยกันไปนานๆเลยค่ะ<br>
+                เค้ารักเธอ<br>
+                rak nongwen tisud nai lokkkk<br>
+                กลับมาคบกันนะ
             </div>
         </div>
+        <p class="tap-instruction" id="hint">TAP TO OPEN ♡</p>
     </div>
 
     <script>
@@ -152,41 +154,36 @@
             if (input.length < 6) {
                 input += num;
                 updateDots();
-                if (input.length === 6) {
-                    checkPass();
-                }
+                if (input.length === 6) checkPass();
             }
         }
 
-        function del() {
-            input = input.slice(0, -1);
-            updateDots();
-        }
-
-        function updateDots() {
-            dots.forEach((dot, i) => {
-                dot.classList.toggle('active', i < input.length);
-            });
-        }
+        function del() { input = input.slice(0, -1); updateDots(); }
+        function updateDots() { dots.forEach((dot, i) => dot.classList.toggle('active', i < input.length)); }
 
         function checkPass() {
             if (input === correct) {
-                // Success
                 loginPage.style.opacity = "0";
                 setTimeout(() => {
                     loginPage.style.display = "none";
                     mainContent.style.display = "flex";
-                    setTimeout(() => { mainContent.style.opacity = "1"; }, 100);
-                    bgm.play().catch(e => console.log("Autoplay blocked. User interaction needed."));
+                    setTimeout(() => mainContent.style.opacity = "1", 100);
+                    bgm.play().catch(() => {});
                 }, 800);
             } else {
-                // Fail
                 loginPage.classList.add('shake');
-                setTimeout(() => {
-                    loginPage.classList.remove('shake');
-                    input = "";
-                    updateDots();
-                }, 400);
+                setTimeout(() => { loginPage.classList.remove('shake'); input = ""; updateDots(); }, 400);
+            }
+        }
+
+        function openLetter() {
+            const env = document.getElementById('env');
+            const hint = document.getElementById('hint');
+            env.classList.toggle('open');
+            if(env.classList.contains('open')) {
+                hint.style.display = 'none';
+            } else {
+                setTimeout(() => hint.style.display = 'block', 500);
             }
         }
     </script>
