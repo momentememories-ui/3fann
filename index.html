@@ -27,19 +27,20 @@
             position: relative;
         }
 
-        /* --- Background Hearts --- */
+        /* --- Background Hearts (CLEARER) --- */
         .heart-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 0; overflow: hidden; display: none;
         }
         .floating-heart {
-            position: absolute; color: rgba(255, 255, 255, 0.2);
-            font-size: 1.2rem; animation: floatUp linear forwards;
+            position: absolute; color: rgba(255, 255, 255, 0.45); /* เพิ่มความชัดของหัวใจที่นี่ */
+            font-size: 1.6rem; /* เพิ่มขนาดของหัวใจเล็กน้อย */
+            animation: floatUp linear forwards;
         }
         @keyframes floatUp {
             0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
-            20% { opacity: 0.5; }
-            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+            20% { opacity: 1; } /* ทำให้หัวใจปรากฏชัดเจนเมื่อลอยขึ้นมา */
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0.1; } /* หัวใจยังคงเหลือความชัดเล็กน้อยก่อนหายไป */
         }
 
         /* --- Login Section --- */
@@ -153,7 +154,7 @@
                 <span class="highlight">Dear you,</span>
                 Happy anniversary 1 m ka tirak<br>
                 ขอให้เรายังรักกันแบบนี้ไปเรื่อยๆนะคะ<br>
-                เค้าขอโทษที่ชอบงี่เง่าหรือว่าชวนทะเลาะบ่อยๆ<br>
+                เค้าขอโทษที่ชอบงี่เง่า<br>หรือว่าชวนทะเลาะบ่อยๆ<br>
                 แล้วก็ชอบบอกว่ารำคาญ<br>
                 ทั้งๆที่เค้าทักเธอไปก่อน<br>
                 เค้าแค่ไม่รู้ว่าจะคุยอะไรเค้าคิดถึงเธอเฉยๆ <br>
@@ -214,7 +215,8 @@
                 heart.innerHTML = '♡';
                 heart.style.left = Math.random() * 100 + 'vw';
                 heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
-                heart.style.opacity = Math.random();
+                /* เพิ่มความชัดของหัวใจที่นี่ */
+                //heart.style.opacity = Math.random(); // เอาบรรทัดนี้ออกเพื่อให้หัวใจมีความชัดเท่ากัน
                 heartContainer.appendChild(heart);
                 setTimeout(() => heart.remove(), 7000);
             }, 400);
