@@ -10,7 +10,7 @@
             --bg: #0a0a0a;
             --text-dim: #666;
             --white: #ffffff;
-            --card-bg: #1a1a1a;
+            --card-bg: #fdfdfd;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -27,26 +27,25 @@
             position: relative;
         }
 
-        /* --- Background Hearts (CLEARER) --- */
+        /* --- Background Hearts --- */
         .heart-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 0; overflow: hidden; display: none;
         }
         .floating-heart {
-            position: absolute; color: rgba(255, 255, 255, 0.45); /* เพิ่มความชัดของหัวใจที่นี่ */
-            font-size: 1.6rem; /* เพิ่มขนาดของหัวใจเล็กน้อย */
-            animation: floatUp linear forwards;
+            position: absolute; color: rgba(255, 255, 255, 0.45);
+            font-size: 1.6rem; animation: floatUp linear forwards;
         }
         @keyframes floatUp {
             0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
-            20% { opacity: 1; } /* ทำให้หัวใจปรากฏชัดเจนเมื่อลอยขึ้นมา */
-            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0.1; } /* หัวใจยังคงเหลือความชัดเล็กน้อยก่อนหายไป */
+            20% { opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0.1; }
         }
 
         /* --- Login Section --- */
         #login-page {
             position: fixed; inset: 0; background: var(--bg);
-            z-index: 100; display: flex; flex-direction: column;
+            z-index: 1000; display: flex; flex-direction: column;
             align-items: center; justify-content: center;
             transition: opacity 0.8s ease;
         }
@@ -72,6 +71,7 @@
 
         .envelope-container {
             position: relative; width: 280px; height: 180px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
         }
 
         .envelope-base {
@@ -87,14 +87,19 @@
             transition: transform 0.6s ease; z-index: 7;
         }
 
-        /* การ์ดข้อความ (เริ่มต้นซ่อนในซอง) */
+        /* การ์ดข้อความ (ปรับให้เด้งจากกลางซอง) */
         .letter-card {
-            position: absolute; top: 10px; left: 10px; right: 10px; bottom: 10px;
-            background: #fdfdfd; color: #111; border-radius: 5px;
+            position: absolute; 
+            background: var(--card-bg); color: #111; border-radius: 5px;
             padding: 35px 25px; z-index: 2; opacity: 0;
-            transition: transform 1s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.5s ease, height 0.8s ease;
-            transform: scale(0.8) translateY(0); pointer-events: none;
-            overflow-y: auto; text-align: left; line-height: 1.8;
+            
+            /* จุดสำคัญ: เริ่มต้นจากกึ่งกลางซองและขนาดเล็กมาก */
+            width: 260px; height: 160px;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0.1); 
+            
+            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+            pointer-events: none; overflow-y: auto; text-align: left; line-height: 1.8;
             box-shadow: 0 0 50px rgba(0,0,0,0.8);
         }
 
@@ -103,9 +108,11 @@
         
         .envelope-container.open .letter-card {
             opacity: 1; pointer-events: auto;
-            position: fixed; top: 50%; left: 50%;
+            position: fixed; /* ให้ลอยเหนือทุกอย่าง */
+            width: 90%; max-width: 340px; 
+            height: auto; max-height: 80vh;
+            /* ดีดตัวออกมาวางทับกลางจอพอดี */
             transform: translate(-50%, -50%) scale(1);
-            width: 90%; max-width: 340px; height: auto; max-height: 80vh;
             z-index: 1000;
         }
 
@@ -154,7 +161,7 @@
                 <span class="highlight">Dear you,</span>
                 Happy anniversary 1 m ka tirak<br>
                 ขอให้เรายังรักกันแบบนี้ไปเรื่อยๆนะคะ<br>
-                เค้าขอโทษที่ชอบงี่เง่า<br>หรือว่าชวนทะเลาะบ่อยๆ<br>
+                เค้าขอโทษที่ชอบงี่เง่าหรือว่าชวนทะเลาะบ่อยๆ<br>
                 แล้วก็ชอบบอกว่ารำคาญ<br>
                 ทั้งๆที่เค้าทักเธอไปก่อน<br>
                 เค้าแค่ไม่รู้ว่าจะคุยอะไรเค้าคิดถึงเธอเฉยๆ <br>
@@ -215,8 +222,6 @@
                 heart.innerHTML = '♡';
                 heart.style.left = Math.random() * 100 + 'vw';
                 heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
-                /* เพิ่มความชัดของหัวใจที่นี่ */
-                //heart.style.opacity = Math.random(); // เอาบรรทัดนี้ออกเพื่อให้หัวใจมีความชัดเท่ากัน
                 heartContainer.appendChild(heart);
                 setTimeout(() => heart.remove(), 7000);
             }, 400);
